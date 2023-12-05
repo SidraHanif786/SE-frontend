@@ -20,7 +20,7 @@ const Products = () => {
   const fetchProducts = async (page = 1, pageSize = 12) => {
     try {
       const response = await client.get(
-        `/product/getAll?page=${page}&pageSize=${pageSize}`
+        `/product/getAll?page=${page}&pageSize=${pageSize}&sortBy=rating&sort=desc`
       );
       const responseData = response.data.data;
       setProducts(responseData.docs);
