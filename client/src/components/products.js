@@ -5,6 +5,8 @@ import client from "../service";
 const Products = () => {
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCat] = useState(-1);
   const [pageInfo, setPageInfo] = useState({
     totalDocs: 0,
     totalPages: 1,
@@ -15,15 +17,25 @@ const Products = () => {
 
   useEffect(() => {
     fetchProducts(1, 12);
+    getCategories();
   }, []); // Fetch products on component mount
 
-  const fetchProducts = async (page = 1, pageSize = 12) => {
+  const fetchProducts = async (id = "", page = 1, pageSize = 12) => {
     try {
-      const response = await client.get(
-        `/product/getAll?page=${page}&pageSize=${pageSize}&sortBy=rating&sort=desc`
+      const res = await client.get(
+        `/product/getAll?page=${page}&pageSize=${pageSize}&sortBy=rating&sort=desc${
+          id !== -1 ? `&cid=${id}` : ""
+        }`
       );
-      const responseData = response.data.data;
-      setProducts(responseData.docs);
+      const responseData = res.data.data;
+
+      setProducts(() => {
+        if (id !== "" && id === selectedCategory) {
+          return [...responseData.docs];
+        } else {
+          return responseData.docs;
+        }
+      });
 
       setPageInfo({
         totalDocs: responseData.totalDocs,
@@ -42,7 +54,33 @@ const Products = () => {
   };
 
   const handlePageChange = async (newPage) => {
-    await fetchProducts(newPage, 12);
+    try {
+      await fetchProducts(selectedCategory, newPage, 12);
+    } catch (error) {
+      console.error("Error handling page change:", error);
+    }
+  };
+  //=======category
+  const getCategories = async () => {
+    try {
+      const resCat = await client.get("/category/getAll");
+      setCategories(resCat.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCategoryClasses = (id) => {
+    return `text-[16px] ${
+      selectedCategory === id
+        ? "flex font-semibold text-black"
+        : "text-[#00000080]"
+    } mr-[40px] cursor-pointer hover:text-[#757575]`;
+  };
+
+  const handleCategoryClick = (id) => {
+    fetchProducts(id === -1 ? "" : id);
+    setSelectedCat(id);
   };
 
   return (
@@ -51,7 +89,21 @@ const Products = () => {
         <h2 className="font-normal text-xl text-center pb-8 md:text-3xl">
           All Products
         </h2>
-
+        <div className="flex items-center mb-4">
+          <p
+            className={getCategoryClasses(-1)}
+            onClick={() => handleCategoryClick(-1)}>
+            All Products
+          </p>
+          {categories?.map(({ _id, title }) => (
+            <p
+              onClick={() => handleCategoryClick(_id)}
+              key={_id}
+              className={getCategoryClasses(_id)}>
+              {title}
+            </p>
+          ))}
+        </div>
         <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
           {products?.map((product) => (
             <a key={product._id} href="#" className="group relative">
