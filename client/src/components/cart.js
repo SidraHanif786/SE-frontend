@@ -26,24 +26,17 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     try {
-      // const userToken = localStorage.getItem("userToken");
-      // if (!userToken) {
-      //   console.log("LogIn first");
-      //   return;
-      // }
-
       const orderData = {
         products: cartItems.map((item) => ({
-          productId: item._id, // Assuming item.id is the product ID
+          productId: item._id,
           quantity: item.quantity,
           totalPrice: item.price * item.quantity,
         })),
-        address: '123 Main St, City, Country', // Hardcoded for now
+        address: "123 Main St, City, Country", // Hardcoded for now
         totalBalance: calculateTotal() + 3000,
       };
-  
 
-      const response = await client.post('/orders/create', orderData, {
+      const response = await client.post("/orders/create", orderData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,7 +71,7 @@ const Cart = () => {
                 </thead>
                 <tbody>
                   {cartItems.map((item) => (
-                    <tr key={item.id}>
+                    <tr key={item._id}>
                       <td className="py-4">
                         <div className="flex items-center">
                           <img
@@ -97,10 +90,10 @@ const Cart = () => {
                             onClick={() => {
                               const newQuantity = item.quantity - 1;
                               if (newQuantity > 0) {
-                                handleQuantityChange(item.id, newQuantity);
+                                handleQuantityChange(item._id, newQuantity);
                               } else {
                                 // If quantity reaches 0, remove the item
-                                handleRemoveItem(item.id);
+                                handleRemoveItem(item._id);
                               }
                             }}
                             disabled={item.total === 0}>
@@ -114,7 +107,7 @@ const Cart = () => {
                             onClick={() => {
                               if (item.total > item.quantity) {
                                 handleQuantityChange(
-                                  item.id,
+                                  item._id,
                                   item.quantity + 1
                                 );
                               }

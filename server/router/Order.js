@@ -4,7 +4,7 @@ const { authorizeUser, onlyAdmin } = require('../middleware/Auth');
 
 const orderRouter = express.Router();
 
-orderRouter.post('/create', authorizeUser, orderController.createOrder);
+orderRouter.post('/create', orderController.createOrder);
 orderRouter.get('/stats',authorizeUser, onlyAdmin, orderController.totalNumerOfProductSold);
 orderRouter.get('/getAll',authorizeUser,onlyAdmin, orderController.getAllOrders);
 
