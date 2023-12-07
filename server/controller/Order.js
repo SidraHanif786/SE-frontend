@@ -7,7 +7,7 @@ const createOrder = async (req, res) => {
   const { body, user } = req;
   try {
     const order = await Order.create({
-      customer: user?._id,
+      customer: '656c5642233f3d8ed0250c91',
       products: body.products,
       totalBalance: body.totalBalance,
       address: body.address,

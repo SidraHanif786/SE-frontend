@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import client from "../service";
 import { useAuth } from "./AuthContext";
 
 const Login = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); 
   const handleLogin = async () => {
     try {
       const response = await client.post("/auth/login", {
@@ -21,10 +24,15 @@ const Login = () => {
       
       // Set token in state
       login(data.token);
+      setShowSuccessPopup(true);
 
     } catch (error) {
       console.error("Error during login:", error);
     }
+  };
+  const handleCloseSuccessPopup = () => {
+    setShowSuccessPopup(false);
+    navigate('/', { replace: true }); 
   };
   return (
     <div>
@@ -109,6 +117,20 @@ const Login = () => {
           </div>
         </div>
       </section>
+      {showSuccessPopup && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg text-center">
+            <p className="text-green-500 text-2xl font-semibold mb-4">
+              Successfully logged in!
+            </p>
+            <button
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+              onClick={() => handleCloseSuccessPopup()}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

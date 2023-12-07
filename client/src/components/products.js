@@ -93,7 +93,7 @@ const Products = () => {
           <p
             className={getCategoryClasses(-1)}
             onClick={() => handleCategoryClick(-1)}>
-            All Products
+            Our Products
           </p>
           {categories?.map(({ _id, title }) => (
             <p

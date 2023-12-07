@@ -4,11 +4,11 @@ const paginate = require("mongoose-paginate-v2");
 
 const orderSchema = new Schema(
   {
-    // customer: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "User",
-    //   required: true,
-    // },
+    customer: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     products: [
       {
         productId: {

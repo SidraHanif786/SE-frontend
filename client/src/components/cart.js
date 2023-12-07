@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useCart } from "./CartContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import client from "../service";
 import { useAuth } from "./AuthContext";
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
   const { token } = useAuth();
   const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();
-
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const navigate = useNavigate();
   const handleQuantityChange = (productId, newQuantity) => {
     updateQuantity(productId, newQuantity);
   };
@@ -43,9 +45,15 @@ const Cart = () => {
       });
 
       console.log("Order created successfully:", response.data);
+      setShowSuccessPopup(true);
     } catch (error) {
       console.error("Error during checkout:", error);
     }
+  };
+  const handleCloseSuccessPopup = () => {
+    setShowSuccessPopup(false);
+    navigate('/', { replace: true }); 
+    clearCart();
   };
 
   return (
@@ -164,6 +172,20 @@ const Cart = () => {
           </div>
         </div>
       </div>
+      {showSuccessPopup && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg text-center">
+            <p className="text-green-500 text-2xl font-semibold mb-4">
+              Order placed successfully!
+            </p>
+            <button
+              className="bg-blue-500 text-white py-2 px-4 rounded-lg"
+              onClick={() => handleCloseSuccessPopup()}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
