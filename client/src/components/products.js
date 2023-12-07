@@ -16,11 +16,11 @@ const Products = () => {
   });
 
   useEffect(() => {
-    fetchProducts(1, 12);
+    fetchProducts(-1, 1, 12);
     getCategories();
   }, []); // Fetch products on component mount
 
-  const fetchProducts = async (id = "", page = 1, pageSize = 12) => {
+  const fetchProducts = async (id = -1, page = 1, pageSize = 12) => {
     try {
       const res = await client.get(
         `/product/getAll?page=${page}&pageSize=${pageSize}&sortBy=rating&sort=desc${
