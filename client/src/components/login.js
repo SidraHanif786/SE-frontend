@@ -6,10 +6,11 @@ import { useAuth } from "./AuthContext";
 const Login = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
-  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
-
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     try {
       const response = await client.post("/auth/login", {
@@ -24,16 +25,23 @@ const Login = () => {
       
       // Set token in state
       login(data.token);
-      setShowSuccessPopup(true);
+      setPopupMessage(data.message || "Login successful!");
+      setShowPopup(true);
 
     } catch (error) {
+      setPopupMessage("Login failed. Please check your credentials.");
+      setShowPopup(true);
       console.error("Error during login:", error);
     }
   };
-  const handleCloseSuccessPopup = () => {
-    setShowSuccessPopup(false);
-    navigate('/', { replace: true }); 
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    // If login was successful, redirect to the home page
+    if (popupMessage === "Login successful!") {
+      navigate("/", { replace: true });
+    }
   };
+
   return (
     <div>
       <section className="">
@@ -117,15 +125,16 @@ const Login = () => {
           </div>
         </div>
       </section>
-      {showSuccessPopup && (
+      {showPopup && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg text-center">
             <p className="text-green-500 text-2xl font-semibold mb-4">
-              Successfully logged in!
+              {popupMessage}
             </p>
             <button
               className="bg-blue-500 text-white py-2 px-4 rounded-lg"
-              onClick={() => handleCloseSuccessPopup()}>
+              onClick={() => handleClosePopup()}
+            >
               Close
             </button>
           </div>

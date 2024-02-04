@@ -6,7 +6,7 @@ import { Location } from 'react-ionicons'
 const Contact = () => {
     return (
         <div className="">
-            <div className="flex w-full min-h-screen justify-center items-center bg-stone-100" >
+            <div className="pt-[120px] pb-[20px] flex w-full min-h-screen justify-center items-center bg-stone-100" >
                 <div className="flex flex-col space-y-6  bg-teal-700 w-full max-w-5xl p-8 pt-20 rounded-none shadow-lg md:rounded-xl md:flex-row md:space-x-6 md:space-y-0 sm:p-12">
                     <div className="flex flex-col space-y-8 justify-between">
                         

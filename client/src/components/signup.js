@@ -1,5 +1,5 @@
 import React from "react";
-
+import fImage from "../imgs/F.jpg";
 const SignUp = () => {
     return (
         <div>
@@ -10,9 +10,9 @@ const SignUp = () => {
         <div className="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 rounded-3 text-black">
           <div className="flex flex-wrap  g-0">
             <div className="lg:w-1/2 pr-4 pl-4 ">
-              <div>
-                <img src='pink.jpeg' alt="bg-img"  />
-              </div>
+            <div>
+                <img src={fImage} alt="bg-img"  width="100%"
+                        height="auto" /></div>
             </div>
             <div className="lg:w-1/2 pr-4 pl-4">
               <div className="flex-auto p-6 md:p-12 md:mx-6">
